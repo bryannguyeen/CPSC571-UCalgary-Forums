@@ -1,0 +1,19 @@
+{
+  "name": "cpsc571-ucalgary-forums",
+  "version": "0.0.1",
+  "description": "Discussion Forum for U of C Students",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bryannguyeen/CPSC571-UCalgary-Forums.git"
+  },
+  "author": "Bryan Nguyen, Wonsuk Lee, Michael Shi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bryannguyeen/CPSC571-UCalgary-Forums/issues"
+  },
+  "homepage": "https://github.com/bryannguyeen/CPSC571-UCalgary-Forums#readme"
+}
