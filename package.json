@@ -15,5 +15,11 @@
   "bugs": {
     "url": "https://github.com/bryannguyeen/CPSC571-UCalgary-Forums/issues"
   },
-  "homepage": "https://github.com/bryannguyeen/CPSC571-UCalgary-Forums#readme"
+  "homepage": "https://github.com/bryannguyeen/CPSC571-UCalgary-Forums#readme",
+  "dependencies": {
+    "ejs": "^2.7.2",
+    "expressjs": "^1.0.1",
+    "sql-template-strings": "^2.2.2",
+    "sqlite": "^3.0.3"
+  }
 }
