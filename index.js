@@ -4,6 +4,7 @@ const sqlite = require('sqlite');
 const SQL = require('sql-template-strings');
 const ejs = require('ejs');
 const bodyParser = require('body-parser');
+const bcrypt = require('bcrypt');
 
 const app = express();
 
@@ -51,8 +52,59 @@ app.get('/register', async (req, res, next) => {
 })
 
 app.post('/register', async (req, res) => {
-    //const email = req.body.email;
-    //console.log(req.body);
+    const email = req.body.email;
+    const password = req.body.password;
+    const confirmPassword = req.body.confirmpassword;
+    const username = req.body.username;
+
+    // Basic syntax check
+    if (!(/\S+@\S+\.\S+/.test(email))) {
+        return res.render('pages/register', {
+            message: 'Not a valid email address',
+            emailReturn: email, usernameReturn: username, passwordReturn: password, confirmpasswordReturn: confirmPassword });
+    }
+    if (/[^A-Za-z0-9\d]/.test(username)) {
+        return res.render('pages/register', {
+            message: 'Nickname can only contain letters and numbers',
+            emailReturn: email, usernameReturn: username, passwordReturn: password, confirmpasswordReturn: confirmPassword });
+    }
+    if (username.length < 1 || username.length > 25) {
+        return res.render('pages/register', {
+            message: 'Invalid username length', 
+            emailReturn: email, usernameReturn: username, passwordReturn: password, confirmpasswordReturn: confirmPassword });
+
+    }
+    if (password != confirmPassword) {
+        return res.render('pages/register', {
+            message: 'Passwords do not match',
+            emailReturn: email, usernameReturn: username, passwordReturn: password, confirmpasswordReturn: confirmPassword });
+    }
+    if (password.length < 8) {
+        return res.render('pages/register', {
+            message: 'Password must be at least 8 characters',
+            emailReturn: email, usernameReturn: username, passwordReturn: password, confirmpasswordReturn: confirmPassword });
+    }
+
+    // Check if email already exists under that account
+    const dbEmail = await req.db.get(SQL`SELECT * FROM user WHERE LOWER(email) = LOWER(${email})`);
+    if (dbEmail) {
+        return res.render('pages/register', {
+            message: 'There is already an account under that email',
+            emailReturn: email, usernameReturn: username, passwordReturn: password, confirmpasswordReturn: confirmPassword });
+    }
+
+    // Check if nickname is taken
+    const dbUsername = await req.db.get(SQL`SELECT * FROM user WHERE LOWER(username) = LOWER(${username})`);
+    if (dbUsername) {
+        return res.render('pages/register', {
+            message: 'Nickname is already taken',
+            emailReturn: email, usernameReturn: username, passwordReturn: password, confirmpasswordReturn: confirmPassword });
+    }
+
+    // if all conditions are met, enter user to database
+    const hashedPassword = await bcrypt.hash(password, 10);
+    await req.db.run(SQL`INSERT INTO user (email, username, password) VALUES(${email}, ${username}, ${hashedPassword})`);
+
 })
 
 main();

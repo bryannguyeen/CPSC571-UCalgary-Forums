@@ -48,7 +48,6 @@ CREATE TABLE IF NOT EXISTS "user" (
 	"email"	varchar(30) NOT NULL,
 	"username"	varchar(25) NOT NULL,
 	"password"	varchar(40) NOT NULL,
-	"password_salt"	INTEGER NOT NULL,
 	"faculty"	varchar(30) DEFAULT 'Not Specified',
 	PRIMARY KEY("email")
 );
