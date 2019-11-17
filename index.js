@@ -3,8 +3,12 @@ const Promise = require('bluebird');
 const sqlite = require('sqlite');
 const SQL = require('sql-template-strings');
 const ejs = require('ejs');
+const bodyParser = require('body-parser');
 
 const app = express();
+
+app.use(bodyParser.urlencoded({ extended: false}));
+app.use(bodyParser.json());
 
 app.set('view engine', 'ejs');
 
@@ -26,11 +30,29 @@ async function main() {
 
 app.get('/', async (req, res, next) => {
     // TODO: Add frontend pages
-    //res.render('pages/index');
+    res.render('pages/index');
 
     const user = await req.db.get(SQL`SELECT * FROM user WHERE email = 'bob@gmail.com'`);
-    res.send(user);
-
+    //res.send(user);
 });
+
+app.get('/welcome', async (req, res, next) => {
+    res.render('pages/welcome');
+})
+
+app.get('/login', async (req, res, next) => {
+    res.render('pages/login');
+})
+
+// TODO: app.post('/login'
+
+app.get('/register', async (req, res, next) => {
+    res.render('pages/register');
+})
+
+app.post('/register', async (req, res) => {
+    //const email = req.body.email;
+    //console.log(req.body);
+})
 
 main();
