@@ -126,4 +126,9 @@ app.post('/register', async (req, res) => {
     // TODO: log in user to their account. Or redirect to log-in page either one works.
 })
 
+// TODO: add sessions for log in and check for the session before letting user into the rest of the pages
+app.get('/dashboard', async (req, res, next) => {
+    res.render('pages/dashboard')
+})
+
 main();
