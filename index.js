@@ -45,7 +45,25 @@ app.get('/login', async (req, res, next) => {
     res.render('pages/login');
 })
 
-// TODO: app.post('/login'
+app.post('/login', async (req, res) => {
+    const email = req.body.email;
+    const password = req.body.password;
+    const dbUser = await req.db.get(SQL`SELECT * FROM user WHERE LOWER(email) = LOWER(${email})`);
+
+    // check if user with that email exists
+    if (!dbUser) {
+        return res.render('pages/login', {
+            message: 'There is no account associated with that email',
+            emailReturn: email, passwordReturn: password});
+    }
+    // check if password is correct
+    if (!(await bcrypt.compare(password, dbUser.password))) {
+        return res.render('pages/login', {
+            message: 'Password is incorrect',
+            emailReturn: email, passwordReturn: password});
+    }
+
+})
 
 app.get('/register', async (req, res, next) => {
     res.render('pages/register');
@@ -57,7 +75,7 @@ app.post('/register', async (req, res) => {
     const confirmPassword = req.body.confirmpassword;
     const username = req.body.username;
 
-    // Basic syntax check
+    // Correct syntax check
     if (!(/\S+@\S+\.\S+/.test(email))) {
         return res.render('pages/register', {
             message: 'Not a valid email address',
@@ -70,7 +88,7 @@ app.post('/register', async (req, res) => {
     }
     if (username.length < 1 || username.length > 25) {
         return res.render('pages/register', {
-            message: 'Invalid username length', 
+            message: 'Invalid username length (at least 1 character, at most 25 characters)', 
             emailReturn: email, usernameReturn: username, passwordReturn: password, confirmpasswordReturn: confirmPassword });
 
     }
@@ -105,6 +123,7 @@ app.post('/register', async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     await req.db.run(SQL`INSERT INTO user (email, username, password) VALUES(${email}, ${username}, ${hashedPassword})`);
 
+    // TODO: log in user to their account. Or redirect to log-in page either one works.
 })
 
 main();
