@@ -5,11 +5,17 @@ const SQL = require('sql-template-strings');
 const ejs = require('ejs');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
+const session = require('express-session');
 
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false}));
 app.use(bodyParser.json());
+app.use(session({
+    secret: 'i be doing work',
+    resave: false,
+    saveUninitialized: true
+}));
 
 app.set('view engine', 'ejs');
 
@@ -29,19 +35,35 @@ async function main() {
     console.log(`Listening on port ${port}: http://localhost:${port}`);
 }
 
-app.get('/', async (req, res, next) => {
-    // TODO: Add frontend pages
-    res.render('pages/index');
+// redirects to login page if user isn't logged in
+async function requiresLogin(req, res, next) {
+    if (!req.session.userID) {
+        return res.redirect('/welcome');
+    }
+    return next();
+}
 
-    const user = await req.db.get(SQL`SELECT * FROM user WHERE email = 'bob@gmail.com'`);
+// redirects to dashboard if user attempts to go to welcome pages
+async function requiresLogout(req, res, next) {
+    if (req.session.userID) {
+        return res.redirect('/dashboard');
+    }
+    return next();
+}
+
+app.get('/', async (req, res, next) => {
+    res.redirect('/welcome');
+    //res.render('pages/index');
+
+    //const user = await req.db.get(SQL`SELECT * FROM user WHERE email = 'bob@gmail.com'`);
     //res.send(user);
 });
 
-app.get('/welcome', async (req, res, next) => {
+app.get('/welcome', requiresLogout, async (req, res, next) => {
     res.render('pages/welcome');
 })
 
-app.get('/login', async (req, res, next) => {
+app.get('/login', requiresLogout, async (req, res, next) => {
     res.render('pages/login');
 })
 
@@ -63,9 +85,12 @@ app.post('/login', async (req, res) => {
             emailReturn: email, passwordReturn: password});
     }
 
+    // if login is valid, create a session
+    req.session.userID = dbUser.email;
+    res.redirect('/dashboard');
 })
 
-app.get('/register', async (req, res, next) => {
+app.get('/register', requiresLogout, async (req, res, next) => {
     res.render('pages/register');
 })
 
@@ -123,12 +148,25 @@ app.post('/register', async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     await req.db.run(SQL`INSERT INTO user (email, username, password) VALUES(${email}, ${username}, ${hashedPassword})`);
 
-    // TODO: log in user to their account. Or redirect to log-in page either one works.
+    req.session.userID = email;
+    res.redirect('/dashboard');
 })
 
-// TODO: add sessions for log in and check for the session before letting user into the rest of the pages
-app.get('/dashboard', async (req, res, next) => {
+app.get('/login', async (req, res, next) => {
+    res.render('pages/login');
+})
+
+app.get('/logout', async (req, res, next) => {
+    await req.session.destroy();
+    res.redirect('welcome');
+})
+
+app.get('/dashboard', requiresLogin, async (req, res, next) => {
     res.render('pages/dashboard')
+})
+
+app.get('/professors', requiresLogin, async (req, res, next) => {
+    res.render('pages/professors')
 })
 
 main();
