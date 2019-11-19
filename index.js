@@ -169,4 +169,24 @@ app.get('/professors', requiresLogin, async (req, res, next) => {
     res.render('pages/professors')
 })
 
+app.get('/newprofessor', requiresLogin, async (req, res, next) => {
+    res.render('pages/newprofessor')
+})
+
+app.post('/newprofessor', requiresLogin, async (req, res, next) => {
+    console.log(req.body);
+    const firstName = req.body.FName;
+    const middleInitial = req.body.MInit;
+    const lastName = req.body.LName;
+    const department = req.body.department;
+    console.log(firstName);
+    console.log(middleInitial);
+    console.log(lastName);
+    console.log(department);
+
+    await req.db.run(SQL`INSERT INTO professor (firstname, middleinitial, lastname, department) VALUES(${firstName}, ${middleInitial}, ${lastName}, ${department})`);
+
+    res.redirect('/professors');
+})
+
 main();
