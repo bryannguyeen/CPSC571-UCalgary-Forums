@@ -19,8 +19,12 @@
           <h1>Professors</h1>
           <small>Don't see your professor? <a href='/newprofessor'>Add a new professor</a></small>
           <div class="jumbotron">
+            <% if (locals.professors.length == 0) { %>
+              <h3>No professors to be displayed :^(</h3>
+              <h5><a href='/newprofessor'>Add a new professor now!</a></h5>
+            <% } %>
             <% for (var i=0; i < locals.professors.length; i++) { %>
-              <a href="#"><h4><%= locals.professors[i].firstname %> <%= locals.professors[i].lastname %></h4></a>
+              <a href="/professor/<%= locals.professors[i].professor_id %>"><h4><%= locals.professors[i].firstname %> <%= locals.professors[i].lastname %></h4></a>
             <% } %>
           </div>
         </div>

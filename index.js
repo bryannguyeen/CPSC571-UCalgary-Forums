@@ -170,8 +170,12 @@ app.get('/professors', requiresLogin, async (req, res, next) => {
         SQL`SELECT professor_id, firstname, lastname
             FROM professor
             ORDER BY firstname, lastname`);
-    console.log(dbProfessors);
     res.render('pages/professors', {professors: dbProfessors})
+})
+
+app.get('/professor/:id', requiresLogin, async (req, res, next) => {
+    const profID = req.params.id;
+    res.send(profID);
 })
 
 app.get('/newprofessor', requiresLogin, async (req, res, next) => {

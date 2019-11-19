@@ -1,3 +1,24 @@
+DROP TABLE IF EXISTS "post";
+CREATE TABLE IF NOT EXISTS "post" (
+	"post_id"	INTEGER PRIMARY KEY AUTOINCREMENT,
+	"title"	varchar(25) NOT NULL,
+	"body_text"	varchar(5000) NOT NULL,
+	"poster_email"	varchar(25) DEFAULT NULL,
+	"post_date"	date NOT NULL,
+	"course_subject"	varchar(4) NOT NULL,
+	"course_number"	INTEGER NOT NULL,
+	"course_semester"	varchar(5) NOT NULL,
+	FOREIGN KEY("poster_email") REFERENCES "user"("email") ON DELETE SET NULL ON UPDATE CASCADE,
+	FOREIGN KEY("course_subject","course_number","course_semester") REFERENCES "course"("subject","number","semester") ON DELETE CASCADE ON UPDATE CASCADE
+);
+DROP TABLE IF EXISTS "user";
+CREATE TABLE IF NOT EXISTS "user" (
+	"email"	varchar(30) NOT NULL,
+	"username"	varchar(25) NOT NULL,
+	"password"	varchar(40) NOT NULL,
+	"faculty"	varchar(30) DEFAULT 'Not Specified',
+	PRIMARY KEY("email")
+);
 DROP TABLE IF EXISTS "moderating";
 CREATE TABLE IF NOT EXISTS "moderating" (
 	"moderator_email"	varchar(30) NOT NULL,
@@ -27,29 +48,6 @@ CREATE TABLE IF NOT EXISTS "comment" (
 	"poster_email"	varchar(30),
 	FOREIGN KEY("post_id") REFERENCES "post"("post_id") ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY("poster_email") REFERENCES "user"("email") ON DELETE SET NULL ON UPDATE CASCADE
-);
-DROP TABLE IF EXISTS "post";
-CREATE TABLE IF NOT EXISTS "post" (
-	"post_id"	INTEGER PRIMARY KEY AUTOINCREMENT,
-	"title"	varchar(25) NOT NULL,
-	"body_text"	varchar(5000) NOT NULL,
-	"poster_email"	varchar(25) DEFAULT NULL,
-	"post_date"	date NOT NULL,
-	"course_subject"	varchar(4) NOT NULL,
-	"course_number"	INTEGER NOT NULL,
-	"course_semester"	varchar(5) NOT NULL,
-	FOREIGN KEY("poster_email") REFERENCES "user"("email") ON DELETE SET NULL ON UPDATE CASCADE,
-	FOREIGN KEY("course_subject") REFERENCES "course"("subject") ON DELETE CASCADE ON UPDATE CASCADE,
-	FOREIGN KEY("course_number") REFERENCES "course"("number") ON DELETE CASCADE ON UPDATE CASCADE,
-	FOREIGN KEY("course_semester") REFERENCES "course"("semester") ON DELETE CASCADE ON UPDATE CASCADE
-);
-DROP TABLE IF EXISTS "user";
-CREATE TABLE IF NOT EXISTS "user" (
-	"email"	varchar(30) NOT NULL,
-	"username"	varchar(25) NOT NULL,
-	"password"	varchar(40) NOT NULL,
-	"faculty"	varchar(30) DEFAULT 'Not Specified',
-	PRIMARY KEY("email")
 );
 DROP TABLE IF EXISTS "course";
 CREATE TABLE IF NOT EXISTS "course" (
