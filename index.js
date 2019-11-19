@@ -166,7 +166,12 @@ app.get('/dashboard', requiresLogin, async (req, res, next) => {
 })
 
 app.get('/professors', requiresLogin, async (req, res, next) => {
-    res.render('pages/professors')
+    const dbProfessors = await db.all(
+        SQL`SELECT professor_id, firstname, lastname
+            FROM professor
+            ORDER BY firstname, lastname`);
+    console.log(dbProfessors);
+    res.render('pages/professors', {professors: dbProfessors})
 })
 
 app.get('/newprofessor', requiresLogin, async (req, res, next) => {
@@ -174,18 +179,17 @@ app.get('/newprofessor', requiresLogin, async (req, res, next) => {
 })
 
 app.post('/newprofessor', requiresLogin, async (req, res, next) => {
-    console.log(req.body);
-    const firstName = req.body.FName;
-    const middleInitial = req.body.MInit;
-    const lastName = req.body.LName;
+    var firstName = req.body.FName;
+    var middleInitial = req.body.MInit;
+    var lastName = req.body.LName;
     const department = req.body.department;
-    console.log(firstName);
-    console.log(middleInitial);
-    console.log(lastName);
-    console.log(department);
+
+    // Capitalize names if not done already
+    firstName = firstName.charAt(0).toUpperCase() + firstName.slice(1);
+    middleInitial = middleInitial.toUpperCase();
+    lastName = lastName.charAt(0).toUpperCase() + lastName.slice(1);
 
     await req.db.run(SQL`INSERT INTO professor (firstname, middleinitial, lastname, department) VALUES(${firstName}, ${middleInitial}, ${lastName}, ${department})`);
-
     res.redirect('/professors');
 })
 

@@ -19,7 +19,9 @@
           <h1>Professors</h1>
           <small>Don't see your professor? <a href='/newprofessor'>Add a new professor</a></small>
           <div class="jumbotron">
-            <p>This is an example to show the potential of an offcanvas layout pattern in Bootstrap. Try some responsive-range viewport sizes to see it in action.</p>
+            <% for (var i=0; i < locals.professors.length; i++) { %>
+              <a href="#"><h4><%= locals.professors[i].firstname %> <%= locals.professors[i].lastname %></h4></a>
+            <% } %>
           </div>
         </div>
         <%- include('../partials/sidebar', {active: 'professors'}); %>
