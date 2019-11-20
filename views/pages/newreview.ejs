@@ -1,0 +1,71 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+  <% include ../partials/head %>
+  <body>
+
+    <% include ../partials/navbar %>
+
+
+    <div class="container">
+
+      <div class="row row-offcanvas row-offcanvas-right">
+
+        <div class="col-12 col-md-9">
+          <p class="float-right hidden-md-up">
+            <button type="button" class="btn btn-primary btn-sm" data-toggle="offcanvas">Toggle nav</button>
+          </p>
+          <h1>New Review for <%= professor.firstname %> <%= professor.middleinitial %> <%= professor.lastname %></h1>
+          <div class="jumbotron">
+            <form action="/newreview" method="POST">
+              <input type="hidden" name="prof_id" value="<%= professor.professor_id %>"> 
+              <h5>Class</h5>
+              <% include ../partials/classselect %>
+              <input type="text" name="class_number" placeholder="Class Number (eg. 201)" minlength=3 maxlength=3 required>
+              <br><br>
+
+              <h5>Overall Rating out of 10</h5>
+              <select class="custom-select required" name="rating" required>
+                <option value="">Rating</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>    
+              </select>
+              <!--
+              <br><br>
+              <input type="checkbox" class="custom-control-label" id="program_requirement" name="program_requirement">
+              <label class="custom-control-label" for="program_requirement"><b>This class was a program requirement</b></label>
+              <br>
+              <input type="checkbox" class="custom-control-label" id="textbook_required" name="textbook_required">
+              <label class="custom-control-label" for="textbook_required"><b>Textbook required</b></label>
+              <br>
+              <input type="checkbox" class="custom-control-label" id="mandatory_attendence" name="mandatory_attendence">
+              <label class="custom-control-label" for="mandatory_attendence"><b>Attendence is madatory</b></label>
+              -->
+              <br><br><br>
+              <h5>Description</h5>
+              <hr>
+              <textarea class="form-control" rows=7 placeholder="Description (Max 5000 Characters)" name="description" required></textarea><br/>
+
+              <br>
+              <br><br>
+              <button class="btn btn-lg btn-primary">Submit</button>
+            </form>
+          </div>
+        </div>
+        <%- include('../partials/sidebar', {active: 'professors'}); %>
+
+      </div>
+
+      <hr>
+    </div>
+  </body>
+</html>

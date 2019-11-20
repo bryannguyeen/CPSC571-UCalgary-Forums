@@ -166,23 +166,63 @@ app.get('/dashboard', requiresLogin, async (req, res, next) => {
 })
 
 app.get('/professors', requiresLogin, async (req, res, next) => {
-    const dbProfessors = await db.all(
-        SQL`SELECT professor_id, firstname, lastname
+    const dbProfessors = await req.db.all(
+        SQL`SELECT *
             FROM professor
-            ORDER BY firstname, lastname`);
+            ORDER BY department, firstname, lastname`);
     res.render('pages/professors', {professors: dbProfessors})
 })
 
 app.get('/professor/:id', requiresLogin, async (req, res, next) => {
     const profID = req.params.id;
-    res.send(profID);
+    const dbProfessor = await req.db.get(
+        SQL`SELECT *
+            FROM professor
+            WHERE professor_id = ${profID}`);
+    const averageRating = await req.db.get(
+        SQL`SELECT AVG (rating) as average
+            FROM review
+            WHERE professor_id = ${profID}`);
+    const reviewsDB = await req.db.all(
+        SQL`SELECT *
+            FROM review
+            WHERE professor_id = ${profID}`);
+
+    const average = Math.round( averageRating.average * 10 ) / 10;
+    res.render('pages/professorprofile', {professor: dbProfessor, rating: average, reviews: reviewsDB});
+})
+
+app.get('/newreview', requiresLogin, async (req, res, next) => {
+    const profID = req.query.prof_id;
+    // if there's no query string redirect to home
+    if (!profID) {
+        return res.redirect('/dashboard');
+    }
+
+    const dbProfessor = await req.db.get(
+        SQL`SELECT *
+            FROM professor
+            WHERE professor_id = ${profID}`);
+
+    res.render('pages/newreview', {professor: dbProfessor});
+})
+
+app.post('/newreview', async (req, res, next) => {
+    const rating = req.body.rating;
+    const description = req.body.description;
+    const profID = req.body.prof_id;
+    const coursename = req.body.class_name+req.body.class_number;
+
+    await req.db.run(SQL`INSERT INTO review (rating, description, professor_id, course_name) VALUES(${rating}, ${description}, ${profID}, ${coursename})`);
+
+    res.redirect('/professor/' + profID)
 })
 
 app.get('/newprofessor', requiresLogin, async (req, res, next) => {
     res.render('pages/newprofessor')
 })
 
-app.post('/newprofessor', requiresLogin, async (req, res, next) => {
+app.post('/newprofessor', async (req, res, next) => {
     var firstName = req.body.FName;
     var middleInitial = req.body.MInit;
     var lastName = req.body.LName;

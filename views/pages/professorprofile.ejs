@@ -1,0 +1,61 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+  <% include ../partials/head %>
+  <body>
+
+    <% include ../partials/navbar %>
+
+
+    <div class="container">
+
+      <div class="row row-offcanvas row-offcanvas-right">
+
+        <div class="col-12 col-md-9">
+          <p class="float-right hidden-md-up">
+            <button type="button" class="btn btn-primary btn-sm" data-toggle="offcanvas">Toggle nav</button>
+          </p>
+          <h1><%= professor.firstname %> <%= professor.middleinitial %> <%= professor.lastname %></h1>
+          <small>Department of <%= professor.department %></small>
+          <br><br>
+          <form action="/newreview">
+            <input type="hidden" name="prof_id" value="<%= professor.professor_id %>" /> 
+            <button class="btn btn-lg btn-secondary">Add Your Own Review</button>
+          </form>
+          <br>
+
+          <h2>Average Rating</h2>
+          <div class="jumbotron">
+          <% if (!rating) { %>
+            <h1>N/A</h1>
+            <small>
+              This professor currently has no reviews<br>
+              You can help out by <a href ="/newreview?prof_id=<%= professor.professor_id %>">submitting your own</a>
+            </small>
+          <% } else { %>
+            <h1> <%= rating %> out of 10 </h1>
+          <% } %>
+          </div>
+
+          <h2><%= reviews.length %> Reviews</h2>
+          <div class="jumbotron">
+            <hr>
+              <% for (var i=0; i < reviews.length; i++) { %>
+                <h3><%= reviews[i].rating %>/10</h3>
+                <small><%= reviews[i].post_date %></small><br>
+                <small>Course Name: <%= reviews[i].course_name %></small>
+                <br><br>
+                <p> <%= reviews[i].description %> </p>
+                <hr>
+              <% } %>
+          </div>
+        </div>
+        <%- include('../partials/sidebar', {active: 'professors'}); %>
+
+      </div>
+
+      <hr>
+    </div>
+  </body>
+</html>

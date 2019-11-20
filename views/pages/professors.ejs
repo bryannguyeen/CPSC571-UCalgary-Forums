@@ -22,9 +22,21 @@
             <% if (locals.professors.length == 0) { %>
               <h3>No professors to be displayed :^(</h3>
               <h5><a href='/newprofessor'>Add a new professor now!</a></h5>
-            <% } %>
-            <% for (var i=0; i < locals.professors.length; i++) { %>
-              <a href="/professor/<%= locals.professors[i].professor_id %>"><h4><%= locals.professors[i].firstname %> <%= locals.professors[i].lastname %></h4></a>
+            <% } else { %>
+
+
+              <% var currentDepartment = professors[0].department %>
+              <h3><%= currentDepartment %></h3>
+              <hr>
+              <% for (var i=0; i < locals.professors.length; i++) { %>
+                <% if (currentDepartment != professors[i].department) { %>
+                  <% currentDepartment = professors[i].department %>
+                  <br><br>
+                  <h3><%= currentDepartment %></h3>
+                  <hr>
+                <% } %>
+                <a href="/professor/<%= professors[i].professor_id %>"><h5><%= professors[i].firstname %> <%= professors[i].middleinitial %> <%= professors[i].lastname %></h5></a>
+              <% } %>
             <% } %>
           </div>
         </div>
