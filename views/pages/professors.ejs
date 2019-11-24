@@ -19,6 +19,11 @@
           <h1>Professors</h1>
           <small>Don't see your professor? <a href='/newprofessor'>Add a new professor</a></small>
           <div class="jumbotron">
+            <% if (locals.searchTerm) { %>
+              <h2>Search results for: "<%= searchTerm %>"</h2>
+              <small><a href='professors'>View all professors</a></small>
+              <br><br>
+            <% } %>
             <% if (locals.professors.length == 0) { %>
               <h3>No professors to be displayed :^(</h3>
               <h5><a href='/newprofessor'>Add a new professor now!</a></h5>

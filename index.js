@@ -169,11 +169,25 @@ app.get('/dashboard', requiresLogin, async (req, res, next) => {
 })
 
 app.get('/professors', requiresLogin, async (req, res, next) => {
-    const dbProfessors = await req.db.all(
-        SQL`SELECT *
-            FROM professor
-            ORDER BY department, firstname, lastname`);
-    res.render('pages/professors', {professors: dbProfessors})
+    var dbProfessors;
+    const term = req.query.professor_search;
+    if (term) {
+        dbProfessors = await req.db.all(
+            SQL`SELECT *
+                FROM professor
+                WHERE
+                firstname LIKE ${term} OR
+                middleinitial LIKE ${term} OR
+                lastname LIKE ${term} OR
+                department LIKE ${term}
+                ORDER BY department, firstname, lastname`);
+    } else {
+        dbProfessors = await req.db.all(
+            SQL`SELECT *
+                FROM professor
+                ORDER BY department, firstname, lastname`);
+    }
+    res.render('pages/professors', {professors: dbProfessors, searchTerm: term})
 })
 
 app.get('/professor/:id', requiresLogin, async (req, res, next) => {
