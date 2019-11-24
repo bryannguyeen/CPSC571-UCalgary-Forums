@@ -204,6 +204,10 @@ app.get('/professor/:id', requiresLogin, async (req, res, next) => {
         SQL`SELECT *
             FROM review
             WHERE professor_id = ${profID}`);
+    
+    //const profTags = await req.db.get(
+        //SQL();
+    //);
 
     const average = Math.round( averageRating.average * 10 ) / 10;
     res.render('pages/professorprofile', {professor: dbProfessor, rating: average, reviews: reviewsDB});
@@ -230,7 +234,18 @@ app.post('/newreview', async (req, res, next) => {
     const profID = req.body.prof_id;
     const coursename = req.body.class_name+req.body.class_number;
 
-    await req.db.run(SQL`INSERT INTO review (rating, description, professor_id, course_name) VALUES(${rating}, ${description}, ${profID}, ${coursename})`);
+    const homework = req.body.homework == "on";
+    const test = req.body.test == "on";
+    const participation = req.body.participation == "on";
+    const respectful = req.body.respectful == "on";
+    const notesonline = req.body.notesonline == "on";
+    const available = req.body.available == "on";
+    const lectures = req.body.lectures == "on";
+
+    await req.db.run(SQL`INSERT INTO review (rating, description, professor_id, course_name,
+                        homework, test, participation, respectful, notesonline, available, lectures)
+                            VALUES(${rating}, ${description}, ${profID}, ${coursename},
+                            ${homework}, ${test}, ${participation}, ${respectful}, ${notesonline}, ${available}, ${lectures})`);
 
     res.redirect('/professor/' + profID)
 })

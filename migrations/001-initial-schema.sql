@@ -6,6 +6,13 @@ CREATE TABLE IF NOT EXISTS "review" (
 	"post_date"	date NOT NULL DEFAULT ((datetime('now','localtime'))),
 	"professor_id"	INTEGER NOT NULL,
 	"course_name"	varchar(7),
+	"homework"	INTEGER DEFAULT 0,
+	"test"	INTEGER DEFAULT 0,
+	"participation"	INTEGER DEFAULT 0,
+	"respectful"	INTEGER DEFAULT 0,
+	"notesonline"	INTEGER DEFAULT 0,
+	"available"	INTEGER DEFAULT 0,
+	"lectures"	INTEGER DEFAULT 0,
 	FOREIGN KEY("professor_id") REFERENCES "professor"("professor_id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 DROP TABLE IF EXISTS "post";

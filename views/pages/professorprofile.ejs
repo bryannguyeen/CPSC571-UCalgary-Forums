@@ -47,6 +47,32 @@
                 <small>Course Name: <%= reviews[i].course_name %></small>
                 <br><br>
                 <p> <%= reviews[i].description %> </p>
+
+                <!-- Displays the characteristic tags -->
+                <% if (reviews[i].homework) { %>
+                  <span class="badge badge-info">heavy workload</span>
+                <% } %>
+                <% if (reviews[i].test) { %>
+                  <span class="badge badge-info">lots of tests</span>
+                <% } %>
+                <% if (reviews[i].participation) { %>
+                  <span class="badge badge-info">mandatory participation</span>
+                <% } %>
+                <% if (reviews[i].respectful) { %>
+                  <span class="badge badge-info">respectful</span>
+                <% } %>
+                <% if (reviews[i].notesonline) { %>
+                  <span class="badge badge-info">posts notes online</span>
+                <% } %>
+                <% if (reviews[i].available) { %>
+                  <span class="badge badge-info">available outside class</span>
+                <% } %>
+                <% if (reviews[i].lectures) { %>
+                  <span class="badge badge-info">amazing lectures</span>
+                <% } %>
+
+
+
                 <hr>
               <% } %>
           </div>
