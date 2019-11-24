@@ -35,6 +35,30 @@
             </small>
           <% } else { %>
             <h1> <%= rating %> out of 10 </h1>
+            <% if (tagCount.homework) { %>
+              <span class="badge badge-info">heavy workload (<%= tagCount.homework %>)</span>
+            <% } %>
+            <% if (tagCount.test > 0) { %>
+              <span class="badge badge-info">lots of tests (<%= tagCount.test %>)</span>
+            <% } %>
+            <% if (tagCount.participation > 0) { %>
+              <span class="badge badge-info">mandatory participation (<%= tagCount.participation %>)</span>
+            <% } %>
+            <% if (tagCount.respectful > 0) { %>
+              <span class="badge badge-info">respectful (<%= tagCount.respectful %>)</span>
+            <% } %>
+            <% if (tagCount.notesonline > 0) { %>
+              <span class="badge badge-info">posts notes online (<%= tagCount.notesonline %>)</span>
+            <% } %>
+            <% if (tagCount.available > 0) { %>
+              <span class="badge badge-info">available outside class (<%= tagCount.available %>)</span>
+            <% } %>
+            <% if (tagCount.lectures > 0) { %>
+              <span class="badge badge-info">amazing lectures (<%= tagCount.lectures %>)</span>
+            <% } %>
+
+
+
           <% } %>
           </div>
 

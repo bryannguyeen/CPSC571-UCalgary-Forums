@@ -205,12 +205,18 @@ app.get('/professor/:id', requiresLogin, async (req, res, next) => {
             FROM review
             WHERE professor_id = ${profID}`);
     
-    //const profTags = await req.db.get(
-        //SQL();
-    //);
+    // Gets the counts of each individual occurence of a tag
+    const profTags = await req.db.get(
+        SQL`SELECT
+            SUM(homework) as homework, SUM(test) as test, SUM(participation) as participation, SUM(respectful) as respectful,
+            SUM(notesonline) as notesonline, SUM(available) as available, SUM(lectures) as lectures
+            FROM review
+            WHERE professor_id = ${profID}`
+    );
+    console.log(profTags)
 
     const average = Math.round( averageRating.average * 10 ) / 10;
-    res.render('pages/professorprofile', {professor: dbProfessor, rating: average, reviews: reviewsDB});
+    res.render('pages/professorprofile', {professor: dbProfessor, rating: average, reviews: reviewsDB, tagCount: profTags});
 })
 
 app.get('/newreview', requiresLogin, async (req, res, next) => {
