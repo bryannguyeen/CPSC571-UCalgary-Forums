@@ -6,6 +6,7 @@ const ejs = require('ejs');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
 const session = require('express-session');
+const path = require('path');
 
 const app = express();
 
@@ -18,6 +19,8 @@ app.use(session({
 }));
 
 app.set('view engine', 'ejs');
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 let db;
 
@@ -113,7 +116,7 @@ app.post('/register', async (req, res) => {
     }
     if (username.length < 1 || username.length > 25) {
         return res.render('pages/register', {
-            message: 'Invalid username length (at least 1 character, at most 25 characters)', 
+            message: 'Invalid username length (at least 1 character, at most 25 characters)',
             emailReturn: email, usernameReturn: username, passwordReturn: password, confirmpasswordReturn: confirmPassword });
 
     }
