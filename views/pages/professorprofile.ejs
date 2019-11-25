@@ -100,6 +100,17 @@
                 <hr>
               <% } %>
           </div>
+
+          <h2>Questions</h2>
+          <small>Have a question about this professor? <a href='/newquestion?prof_id=<%= professor.professor_id %>'>ask away</a></small>
+          <div class="jumbotron">
+              <% for (var i=0; i < questions.length; i++) { %>
+                <h4><%= questions[i].question_text %></h4>
+                <small><a href='#'>View all answers to this question</a></small><br>
+
+                <hr>
+              <% } %>
+          </div>
         </div>
         <%- include('../partials/sidebar', {active: 'professors'}); %>
 

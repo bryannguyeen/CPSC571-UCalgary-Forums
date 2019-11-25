@@ -213,10 +213,15 @@ app.get('/professor/:id', requiresLogin, async (req, res, next) => {
             FROM review
             WHERE professor_id = ${profID}`
     );
-    console.log(profTags)
+
+    // Get the list of questions asked about this professor
+    const questionsDB = await req.db.all(
+        SQL`SELECT *
+            FROM question
+            WHERE professor_id = ${profID}`);
 
     const average = Math.round( averageRating.average * 10 ) / 10;
-    res.render('pages/professorprofile', {professor: dbProfessor, rating: average, reviews: reviewsDB, tagCount: profTags});
+    res.render('pages/professorprofile', {professor: dbProfessor, rating: average, reviews: reviewsDB, questions: questionsDB, tagCount: profTags});
 })
 
 app.get('/newreview', requiresLogin, async (req, res, next) => {
@@ -252,6 +257,31 @@ app.post('/newreview', async (req, res, next) => {
                         homework, test, participation, respectful, notesonline, available, lectures)
                             VALUES(${rating}, ${description}, ${profID}, ${coursename},
                             ${homework}, ${test}, ${participation}, ${respectful}, ${notesonline}, ${available}, ${lectures})`);
+
+    res.redirect('/professor/' + profID)
+})
+
+app.get('/newquestion', requiresLogin, async (req, res, next) => {
+    const profID = req.query.prof_id;
+    // if there's no query string redirect to home
+    if (!profID) {
+        return res.redirect('/dashboard');
+    }
+
+    const dbProfessor = await req.db.get(
+        SQL`SELECT *
+            FROM professor
+            WHERE professor_id = ${profID}`);
+
+    res.render('pages/newquestion', {professor: dbProfessor});
+})
+
+app.post('/newquestion', async (req, res, next) => {
+    const question = req.body.question;
+    const profID = req.body.prof_id;
+
+    await req.db.run(SQL`INSERT INTO question (professor_id, question_text)
+                            VALUES(${profID}, ${question})`);
 
     res.redirect('/professor/' + profID)
 })
