@@ -170,7 +170,7 @@ app.get('/dashboard', requiresLogin, async (req, res, next) => {
 
 app.get('/professors', requiresLogin, async (req, res, next) => {
     var dbProfessors;
-    const term = req.query.professor_search;
+    const term = req.query.search;
     if (term) {
         dbProfessors = await req.db.all(
             SQL`SELECT *
@@ -204,7 +204,7 @@ app.get('/professor/:id', requiresLogin, async (req, res, next) => {
         SQL`SELECT *
             FROM review
             WHERE professor_id = ${profID}`);
-    
+
     // Gets the counts of each individual occurence of a tag
     const profTags = await req.db.get(
         SQL`SELECT
