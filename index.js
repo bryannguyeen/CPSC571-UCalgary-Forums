@@ -286,6 +286,36 @@ app.post('/newquestion', async (req, res, next) => {
     res.redirect('/professor/' + profID)
 })
 
+app.get('/question', requiresLogin, async (req, res, next) => {
+    const questionID = req.query.id;
+    // if there's no query string redirect to home
+    if (!questionID) {
+        return res.redirect('/dashboard');
+    }
+
+    const questionDB = await req.db.get(
+        SQL`SELECT *
+            FROM question, professor
+            WHERE post_id = ${questionID} AND question.professor_id = professor.professor_id`);
+    const answersDB = await req.db.all(
+        SQL`SELECT *
+            FROM answer
+            WHERE question_id = ${questionID}`);
+
+    res.render('pages/question', {question: questionDB, answers: answersDB});
+})
+
+app.post('/question', async (req, res, next) => {
+    const questionID = req.body.question_id;
+    const answer_text = req.body.answer;
+
+    await req.db.run(SQL`INSERT INTO answer (question_id, answer_text)
+                        VALUES(${questionID}, ${answer_text})`);
+
+
+    res.redirect('/question?id=' + questionID);
+})
+
 app.get('/newprofessor', requiresLogin, async (req, res, next) => {
     res.render('pages/newprofessor')
 })

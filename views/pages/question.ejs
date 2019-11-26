@@ -1,0 +1,61 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+  <% include ../partials/head %>
+  <body>
+
+    <% include ../partials/navbar %>
+
+
+    <div class="container">
+
+      <div class="row row-offcanvas row-offcanvas-right">
+
+        <div class="col-12 col-md-9">
+          <p class="float-right hidden-md-up">
+            <button type="button" class="btn btn-primary btn-sm" data-toggle="offcanvas">Toggle nav</button>
+          </p>
+          <h1><%= question.firstname %> <%= question.middleinitial %> <%= question.lastname %></h1>
+          <small>Department of <%= question.department %></small>
+          <br><br>
+          <form action="/newreview">
+            <input type="hidden" name="prof_id" value="<%= question.professor_id %>" /> 
+            <button class="btn btn-lg btn-secondary">Add Your Own Review</button>
+          </form>
+          <br>
+
+          <div class="jumbotron">
+            <h2><%= question.question_text %></h2>
+            <hr>
+            <h4>Answers</h4>
+            <br>
+            <% if (answers.length == 0) { %>
+              <p>No one has answered this yet :/</p>
+            <% } %>
+
+            <% for (var i=0; i < answers.length; i++) { %>
+              <p><%= answers[i].answer_text %></p>
+              <small>Answered on <%= answers[i].post_date %></small><br>
+              <hr>
+            <% } %>
+
+            <br><br>
+            <h5>Submit your own answer</h5>
+            <form action="/question" method="POST">
+              <input type="hidden" name="question_id" value="<%= question.post_id %>"> 
+              <textarea class="form-control" rows=4 placeholder="Description (Max 500 Characters)" name="answer" required></textarea><br/>
+
+              <button class="btn btn-lg btn-primary">Submit</button>
+            </form>
+
+          </div>
+        </div>
+        <%- include('../partials/sidebar', {active: 'professors'}); %>
+
+      </div>
+
+      <hr>
+    </div>
+  </body>
+</html>
