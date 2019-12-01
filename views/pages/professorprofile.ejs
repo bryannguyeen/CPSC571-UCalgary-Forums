@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
-
+  <link href="../style.css" rel="stylesheet" type="text/css">
   <% include ../partials/head %>
   <body>
 
@@ -19,12 +19,24 @@
           <h1><%= professor.firstname %> <%= professor.middleinitial %> <%= professor.lastname %></h1>
           <small>Department of <%= professor.department %></small>
           <br><br>
-          <form action="/newreview">
-            <input type="hidden" name="prof_id" value="<%= professor.professor_id %>" /> 
-            <button class="btn btn-lg btn-secondary">Add Your Own Review</button>
+          <form class="prof-class" action="/professor/<%= professor.professor_id %>" method="GET">
+            <select name="course" class="custom-select required prof-class" onchange="submit()">
+                <option value="">Select A Course</option>
+                <% for (var i=0; i < courseList.length; i++) { %>
+                  <option value=<%= courseList[i].course_name %>><%= courseList[i].course_name %></option>
+                <% } %>
+            </select>
+          </form>
+          <form action="/newreview" class="new-review-button">
+            <input type="hidden" name="prof_id" value="<%= professor.professor_id %>" />
+            <button class="btn btn-lg btn-secondary">Add A Review</button>
           </form>
           <br>
-
+          <script>
+            function selectCourse() {
+              location.reload();
+            }
+          </script>
           <h2>Average Rating</h2>
           <div class="jumbotron">
           <% if (!rating) { %>
@@ -34,7 +46,7 @@
               You can help out by <a href ="/newreview?prof_id=<%= professor.professor_id %>">submitting your own</a>
             </small>
           <% } else { %>
-            <h1> <%= rating %> out of 10 </h1>
+            <h1> <%= rating %>/10 </h1>
             <% if (tagCount.homework) { %>
               <span class="badge badge-info">heavy workload (<%= tagCount.homework %>)</span>
             <% } %>
