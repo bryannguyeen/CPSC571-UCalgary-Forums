@@ -191,28 +191,56 @@ app.get('/professors', requiresLogin, async (req, res, next) => {
 })
 
 app.get('/professor/:id', requiresLogin, async (req, res, next) => {
+    let averageRating, reviewsDB, profTags;
+    let course = req.query.course;
     const profID = req.params.id;
     const dbProfessor = await req.db.get(
         SQL`SELECT *
             FROM professor
             WHERE professor_id = ${profID}`);
-    const averageRating = await req.db.get(
-        SQL`SELECT AVG (rating) as average
+    const courseList = await req.db.all(
+        SQL`SELECT DISTINCT course_name
             FROM review
             WHERE professor_id = ${profID}`);
-    const reviewsDB = await req.db.all(
-        SQL`SELECT *
-            FROM review
-            WHERE professor_id = ${profID}`);
+    if (!course) {
+      course = "";
+    }
+    if (course !== "") {
+      averageRating = await req.db.get(
+         SQL`SELECT AVG (rating) as average
+             FROM review
+             WHERE professor_id = ${profID} AND course_name = ${course}`);
+      reviewsDB = await req.db.all(
+          SQL`SELECT *
+              FROM review
+              WHERE professor_id = ${profID} AND course_name = ${course}`);
 
-    // Gets the counts of each individual occurence of a tag
-    const profTags = await req.db.get(
-        SQL`SELECT
-            SUM(homework) as homework, SUM(test) as test, SUM(participation) as participation, SUM(respectful) as respectful,
-            SUM(notesonline) as notesonline, SUM(available) as available, SUM(lectures) as lectures
-            FROM review
-            WHERE professor_id = ${profID}`
-    );
+      profTags = await req.db.get(
+          SQL`SELECT
+              SUM(homework) as homework, SUM(test) as test, SUM(participation) as participation, SUM(respectful) as respectful,
+              SUM(notesonline) as notesonline, SUM(available) as available, SUM(lectures) as lectures
+              FROM review
+              WHERE professor_id = ${profID} AND course_name = ${course}`
+      );
+    } else {
+      averageRating = await req.db.get(
+          SQL`SELECT AVG (rating) as average
+              FROM review
+              WHERE professor_id = ${profID}`);
+      reviewsDB = await req.db.all(
+          SQL`SELECT *
+              FROM review
+              WHERE professor_id = ${profID}`);
+
+      // Gets the counts of each individual occurence of a tag
+      profTags = await req.db.get(
+          SQL`SELECT
+              SUM(homework) as homework, SUM(test) as test, SUM(participation) as participation, SUM(respectful) as respectful,
+              SUM(notesonline) as notesonline, SUM(available) as available, SUM(lectures) as lectures
+              FROM review
+              WHERE professor_id = ${profID}`
+      );
+    }
 
     // Get the list of questions asked about this professor
     const questionsDB = await req.db.all(
@@ -220,8 +248,8 @@ app.get('/professor/:id', requiresLogin, async (req, res, next) => {
             FROM question
             WHERE professor_id = ${profID}`);
 
-    const average = Math.round( averageRating.average * 10 ) / 10;
-    res.render('pages/professorprofile', {professor: dbProfessor, rating: average, reviews: reviewsDB, questions: questionsDB, tagCount: profTags});
+    let average = Math.round( averageRating.average * 10 ) / 10;
+    res.render('pages/professorprofile', {course: course, courseList: courseList, professor: dbProfessor, rating: average, reviews: reviewsDB, questions: questionsDB, tagCount: profTags});
 })
 
 app.get('/newreview', requiresLogin, async (req, res, next) => {

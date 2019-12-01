@@ -1,6 +1,15 @@
 
 body {
-  background: lightgrey;
+  background: lightgrey !important;
+}
+
+.prof-class {
+  width: 20vw;
+  height: 51px !important;
+}
+
+.new-review-button {
+  float: right;
 }
 
 .campus-background {
