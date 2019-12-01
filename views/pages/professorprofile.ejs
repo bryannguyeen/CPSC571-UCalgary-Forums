@@ -21,9 +21,10 @@
           <br><br>
           <form class="prof-class" action="/professor/<%= professor.professor_id %>" method="GET">
             <select name="course" class="custom-select required prof-class" onchange="submit()">
-                <option value="">Select A Course</option>
-                <% for (var i=0; i < courseList.length; i++) { %>
-                  <option value=<%= courseList[i].course_name %>><%= courseList[i].course_name %></option>
+                <option value="" <%= course == '' ? 'selected' : ''%>>Select A Course</option>
+                <% for (var i=0; i < courseList.length; i++) {
+                  var selected = ( course == courseList[i].course_name ) ? "selected" : "";%>
+                  <option value=<%= courseList[i].course_name %> <%=selected %>><%= courseList[i].course_name %></option>
                 <% } %>
             </select>
           </form>
