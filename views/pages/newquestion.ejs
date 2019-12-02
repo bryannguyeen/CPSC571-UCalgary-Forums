@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
-
+  <link href="../style.css" rel="stylesheet" type="text/css">
   <% include ../partials/head %>
   <body>
 
@@ -19,7 +19,7 @@
           <h1>Question about <%= professor.firstname %> <%= professor.middleinitial %> <%= professor.lastname %></h1>
           <div class="jumbotron">
             <form action="/newquestion" method="POST">
-              <input type="hidden" name="prof_id" value="<%= professor.professor_id %>"> 
+              <input type="hidden" name="prof_id" value="<%= professor.professor_id %>">
               <h2>Ask away</h2>
               <hr>
               <textarea class="form-control" rows=3 placeholder="Question (Max 200 Characters)" name="question" required></textarea><br/>
