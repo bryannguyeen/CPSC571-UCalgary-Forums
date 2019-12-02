@@ -30,7 +30,7 @@
           </form>
           <form action="/newreview" class="new-review-button">
             <input type="hidden" name="prof_id" value="<%= professor.professor_id %>" />
-            <button class="btn btn-lg btn-secondary">Add A Review</button>
+            <button class="btn btn-lg btn-secondary add-review-button">Add A Review</button>
           </form>
           <br>
           <script>
@@ -76,42 +76,106 @@
           </div>
 
           <h2><%= reviews.length %> Reviews</h2>
-          <div class="jumbotron">
-            <hr>
-              <% for (var i=0; i < reviews.length; i++) { %>
-                <h3><%= reviews[i].rating %>/10</h3>
-                <small><%= reviews[i].post_date %></small><br>
-                <small>Course Name: <%= reviews[i].course_name %></small>
-                <br><br>
-                <p> <%= reviews[i].description %> </p>
+          <div class="jumbotron review-container">
+            <table id="myTable">
+            <tr>
+             <!--When a header is clicked, run the sortTable function, with a parameter, 0 for sorting by names, 1 for sorting by country:-->
+              <th onclick="sortTable(0)">Rating</th>
+              <th onclick="sortTable(1)">Class</th>
+              <th onclick="sortTable(2)">Date</th>
+              <th>Comment</th>
+            </tr>
+            <% for (var i=0; i < reviews.length; i++) { %>
+              <tr>
+                <td><%= reviews[i].rating %>/10</td>
+                <td><%= reviews[i].course_name %></td>
+                <td><%= reviews[i].post_date %></td>
+                <td>
+                  <p><%= reviews[i].description %> </p>
+                  </br>
+                  <!-- Displays the characteristic tags -->
+                  <% if (reviews[i].homework) { %>
+                    <span class="badge badge-info">heavy workload</span>
+                  <% } %>
+                  <% if (reviews[i].test) { %>
+                    <span class="badge badge-info">lots of tests</span>
+                  <% } %>
+                  <% if (reviews[i].participation) { %>
+                    <span class="badge badge-info">mandatory participation</span>
+                  <% } %>
+                  <% if (reviews[i].respectful) { %>
+                    <span class="badge badge-info">respectful</span>
+                  <% } %>
+                  <% if (reviews[i].notesonline) { %>
+                    <span class="badge badge-info">posts notes online</span>
+                  <% } %>
+                  <% if (reviews[i].available) { %>
+                    <span class="badge badge-info">available outside class</span>
+                  <% } %>
+                  <% if (reviews[i].lectures) { %>
+                    <span class="badge badge-info">amazing lectures</span>
+                  <% } %>
+                </td>
+              </tr>
+            <% } %>
+            </table>
 
-                <!-- Displays the characteristic tags -->
-                <% if (reviews[i].homework) { %>
-                  <span class="badge badge-info">heavy workload</span>
-                <% } %>
-                <% if (reviews[i].test) { %>
-                  <span class="badge badge-info">lots of tests</span>
-                <% } %>
-                <% if (reviews[i].participation) { %>
-                  <span class="badge badge-info">mandatory participation</span>
-                <% } %>
-                <% if (reviews[i].respectful) { %>
-                  <span class="badge badge-info">respectful</span>
-                <% } %>
-                <% if (reviews[i].notesonline) { %>
-                  <span class="badge badge-info">posts notes online</span>
-                <% } %>
-                <% if (reviews[i].available) { %>
-                  <span class="badge badge-info">available outside class</span>
-                <% } %>
-                <% if (reviews[i].lectures) { %>
-                  <span class="badge badge-info">amazing lectures</span>
-                <% } %>
-
-
-
-                <hr>
-              <% } %>
+            <script>
+            function sortTable(n) {
+            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+            table = document.getElementById("myTable");
+            switching = true;
+            //Set the sorting direction to ascending:
+            dir = "asc";
+            /*Make a loop that will continue until
+            no switching has been done:*/
+            while (switching) {
+              //start by saying: no switching is done:
+              switching = false;
+              rows = table.rows;
+              /*Loop through all table rows (except the
+              first, which contains table headers):*/
+              for (i = 1; i < (rows.length - 1); i++) {
+                //start by saying there should be no switching:
+                shouldSwitch = false;
+                /*Get the two elements you want to compare,
+                one from current row and one from the next:*/
+                x = rows[i].getElementsByTagName("TD")[n];
+                y = rows[i + 1].getElementsByTagName("TD")[n];
+                /*check if the two rows should switch place,
+                based on the direction, asc or desc:*/
+                if (dir == "asc") {
+                  if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                    //if so, mark as a switch and break the loop:
+                    shouldSwitch= true;
+                    break;
+                  }
+                } else if (dir == "desc") {
+                  if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                    //if so, mark as a switch and break the loop:
+                    shouldSwitch = true;
+                    break;
+                  }
+                }
+              }
+              if (shouldSwitch) {
+                /*If a switch has been marked, make the switch
+                and mark that a switch has been done:*/
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+                //Each time a switch is done, increase this count by 1:
+                switchcount ++;
+              } else {
+                /*If no switching has been done AND the direction is "asc",
+                set the direction to "desc" and run the while loop again.*/
+                if (switchcount == 0 && dir == "asc") {
+                  dir = "desc";
+                  switching = true;
+                }
+              }
+            }
+            }
+            </script>
           </div>
 
           <h2>Questions</h2>
