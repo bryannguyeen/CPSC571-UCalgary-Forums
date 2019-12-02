@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
-
+  <link href="../style.css" rel="stylesheet" type="text/css">
   <% include ../partials/head %>
   <body>
 
@@ -19,7 +19,7 @@
           <h1>New Review for <%= professor.firstname %> <%= professor.middleinitial %> <%= professor.lastname %></h1>
           <div class="jumbotron">
             <form action="/newreview" method="POST">
-              <input type="hidden" name="prof_id" value="<%= professor.professor_id %>"> 
+              <input type="hidden" name="prof_id" value="<%= professor.professor_id %>">
               <h5>Class</h5>
               <% include ../partials/classselect %>
               <input type="text" name="class_number" placeholder="Class Number (eg. 201)" minlength=3 maxlength=3 required>
@@ -37,7 +37,7 @@
                 <option value="7">7</option>
                 <option value="8">8</option>
                 <option value="9">9</option>
-                <option value="10">10</option>    
+                <option value="10">10</option>
               </select>
               <br><br>
               <h5>How would you describe this professor? (Optional)</h5>

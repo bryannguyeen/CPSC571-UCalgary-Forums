@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
-
+  <link href="../style.css" rel="stylesheet" type="text/css">
   <% include ../partials/head %>
   <body>
 
@@ -20,7 +20,7 @@
           <small>Department of <%= question.department %></small>
           <br><br>
           <form action="/newreview">
-            <input type="hidden" name="prof_id" value="<%= question.professor_id %>" /> 
+            <input type="hidden" name="prof_id" value="<%= question.professor_id %>" />
             <button class="btn btn-lg btn-secondary">Add Your Own Review</button>
           </form>
           <br>
@@ -43,7 +43,7 @@
             <br><br>
             <h5>Submit your own answer</h5>
             <form action="/question" method="POST">
-              <input type="hidden" name="question_id" value="<%= question.post_id %>"> 
+              <input type="hidden" name="question_id" value="<%= question.post_id %>">
               <textarea class="form-control" rows=4 placeholder="Description (Max 500 Characters)" name="answer" required></textarea><br/>
 
               <button class="btn btn-lg btn-primary">Submit</button>
