@@ -47,7 +47,24 @@
               You can help out by <a href ="/newreview?prof_id=<%= professor.professor_id %>">submitting your own</a>
             </small>
           <% } else { %>
-            <h1> <%= rating %>/10 </h1>
+            <h1>		
+			<% if (rating < 6 && rating > 4) { %>
+				<span style='font-size:75px;'>&#128528;</span>
+			<% } %>
+			<% if (rating < 2) { %>
+				  <span style='font-size:75px;'>&#128542;</span>
+			<% } %>
+			<% if (rating > 8) { %>
+				  <span style='font-size:75px;'>&#128516;</span>
+			<% } %> 
+			<% if (rating > 6 && rating < 8) { %>
+				  <span style='font-size:75px;'>&#128578;</span>
+			<% } %> 
+			<% if (rating > 2 && rating < 4) { %>
+				  <span style='font-size:75px;'>&#128577;</span>
+			<% } %> 
+			<%= rating %>/10
+			</h1>
             <% if (tagCount.homework) { %>
               <span class="badge badge-info">heavy workload (<%= tagCount.homework %>)</span>
             <% } %>
@@ -179,7 +196,7 @@
           </div>
 
           <h2>Questions</h2>
-          <small>Have a question about this professor? <a href='/newquestion?prof_id=<%= professor.professor_id %>'>ask away</a></small>
+          <small>Have a question about this professor? <a href='/newquestion?prof_id=<%= professor.professor_id %>'>Ask away</a></small>
           <div class="jumbotron">
               <% for (var i=0; i < questions.length; i++) { %>
                 <h4><%= questions[i].question_text %></h4>
