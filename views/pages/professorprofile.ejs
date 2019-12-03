@@ -57,10 +57,10 @@
 			<% if (rating >= 8) { %>
 				  <span style='font-size:75px;'>&#128516;</span>
 			<% } %> 
-			<% if (rating > 6 && rating < 8) { %>
+			<% if (rating >= 6 && rating < 8) { %>
 				  <span style='font-size:75px;'>&#128578;</span>
 			<% } %> 
-			<% if (rating > 2 && rating < 4) { %>
+			<% if (rating > 2 && rating <= 4) { %>
 				  <span style='font-size:75px;'>&#128577;</span>
 			<% } %> 
 			<%= rating %>/10
