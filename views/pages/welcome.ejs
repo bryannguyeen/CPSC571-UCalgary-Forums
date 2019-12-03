@@ -17,7 +17,19 @@
     <!-- Custom styles for this template -->
     <link href="https://v4-alpha.getbootstrap.com/examples/cover/cover.css" rel="stylesheet">
   </head>
-
+  <style>
+	body {
+		background-image: url('welcome-img.jpg');
+		background-repeat: no-repeat;
+		background-attachment: fixed;
+		background-size: 100% 100%;
+	}
+	.inner-cover {
+		background-color: black ;
+		padding: 10px ;
+		border: 2px solid gray ;
+	}
+  </style>
   <body>
 
     <div class="site-wrapper">
@@ -36,7 +48,7 @@
             </div>
           </div>
 
-          <div class="inner cover">
+          <div class="inner-cover">
             <h1 class="cover-heading">RateMyProf</h1>
             <p class="lead">Look up reviews about professors and help out other students of U of C</p>
             <form action="/register">
